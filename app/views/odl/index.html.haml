@@ -1,0 +1,44 @@
+#vars.invisible
+	.var_nodes
+		= @topo_nodes
+	.var_links
+		= @topo_links
+
+.container
+	= render partial: 'home/header'
+
+	.row
+		%h1
+			Topology
+
+		%script{:type=>"text/javascript"}
+
+			topologyData = {
+			nodes: JSON.parse($(".var_nodes").text()),
+			links: JSON.parse($(".var_links").text())
+			};
+			
+		#topology
+			= javascript_include_tag 'shell.js'
+
+	.row
+		%h1
+			Nodes
+
+		%table.table.table-striped.table-bordered.table-condensed.text-center.margin-top-10
+			%thead
+				%tr
+					%th.text-center
+						\#
+					%th.text-center
+						Device
+			%tbody
+				- i = 0
+				- @nodes.map do |node|
+					- i += 1
+					%tr
+						%td
+							= i
+						%td{id: node["id"]}
+							= link_to node["id"], "javascript:;" 	
+

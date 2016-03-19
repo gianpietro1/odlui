@@ -22,6 +22,18 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
+# HAML
+gem 'haml'
+# Styling
+gem 'bootstrap-sass', '~> 3.2.0.2'
+# Env variabls
+gem 'figaro', '1.0'
+# JSON RPC CLIENT
+gem 'rest-client', '~> 1.8.0'
+# User management
+gem 'devise'
+# Trema OF Controller
+gem 'trema'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

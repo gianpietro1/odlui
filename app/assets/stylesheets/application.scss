@@ -1,0 +1,108 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+@import 'bootstrap-sprockets';
+@import 'bootstrap';
+@import 'normalize';
+
+/* Universal */
+
+.clearfix:after {
+   content: " "; /* Older browser do not support empty content */
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+	width: 90%;
+  padding: 0;
+}
+
+.invisible {
+  display: none;
+}
+
+/* Header */
+
+.main_header li {
+  display: inline-block;
+  width: 100%;
+  border: 1px solid #5f5f5f;
+  margin-right: -5px;
+  text-align: center;
+}
+
+.main_header {
+  background: lightgrey;
+  padding-left: 0;
+  margin-bottom: 20px;
+}
+
+.main_header ul {
+  padding: 0;
+  margin: 0;
+}
+
+.main_header a {
+  display: block;
+  width: 100%;
+  color: grey;
+  font-size: 1.2em;
+}
+
+.main_header a:hover {
+  text-decoration: none;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.active {
+  text-decoration: none;
+  background-color: #4CAF50;
+  color: white !important;
+}
+
+/* Next Topology */
+
+.n-topology {
+  width: 80% !important;
+  margin-left: 10%;
+  border: 1px solid #f5f5f5;
+  float: left;
+}
+
+/* Responsiveness - Mobile First */
+
+@media (min-width: 768px) {
+
+/* Header */
+
+.main_header li {
+	width: 50%;
+}
+
+.main_header a {
+  font-size: 1.5em;
+  line-height: 1.8em
+}
+
+}

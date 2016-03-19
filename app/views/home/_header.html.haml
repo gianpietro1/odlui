@@ -1,0 +1,9 @@
+%br
+.main_header
+  %ul
+    %li
+      %a{href: root_path, class: (controller_name == 'home' ? 'active' : '') }
+        Home
+    %li
+      %a{href: odl_index_path, class: (controller_name == 'odl' ? 'active' : '') }
+        Network
