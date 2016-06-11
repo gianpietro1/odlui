@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<flow xmlns="urn:opendaylight:flow:inventory">
+
+    <strict>false</strict>
+
+    <flow-name>flow1</flow-name>
+
+    <id>1</id>
+
+    <cookie_mask>255</cookie_mask>
+
+    <cookie>103</cookie>
+
+    <table_id>0</table_id>
+
+    <priority>20</priority>
+
+    <hard-timeout>1800</hard-timeout>
+
+    <idle-timeout>1800</idle-timeout>
+
+    <installHw>true</installHw>
+
+    <instructions>
+
+        <instruction>
+
+            <order>0</order>
+
+            <apply-actions>
+
+                <action>
+
+                    <order>0</order>
+
+                    <output-action>
+
+                        <output-node-connector>22</output-node-connector>
+
+                        <max-length>60</max-length>
+
+                    </output-action>
+
+                </action>
+
+            </apply-actions>
+
+        </instruction>
+
+    </instructions>
+
+    <match>
+
+        <ethernet-match>
+
+            <ethernet-type>
+
+                <type>2048</type>
+
+            </ethernet-type>
+
+        </ethernet-match>
+
+        <ipv4-destination>2.1.1.10/32</ipv4-destination>
+
+    </match>
+
+</flow>
+
+

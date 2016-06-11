@@ -8,9 +8,6 @@
 	= render partial: 'home/header'
 
 	.row
-		%h1
-			Topology
-
 		%script{:type=>"text/javascript"}
 
 			topologyData = {
@@ -19,8 +16,13 @@
 			};
 			
 		#topology
-			= javascript_include_tag 'shell.js'
-
+			.topology-title.clearfix
+				.pull-left
+					Topology
+				.pull-right
+					%button{class:'btn btn-success save_positions'}
+						Save positions
+			
 	.row
 		%h1
 			Nodes
@@ -33,12 +35,14 @@
 					%th.text-center
 						Device
 			%tbody
-				- i = 0
-				- @nodes.map do |node|
-					- i += 1
-					%tr
-						%td
-							= i
-						%td{id: node["id"]}
-							= link_to node["id"], "javascript:;" 	
+				- if @nodes
+					- i = 0
+					- @nodes.map do |node|
+						- i += 1
+						%tr
+							%td
+								= i
+							%td{id: node["id"].to_i}
+								= node["node_id"]
 
+		.positions

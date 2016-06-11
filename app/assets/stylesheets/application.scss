@@ -18,6 +18,7 @@
 @import 'bootstrap';
 @import 'normalize';
 
+
 /* Universal */
 
 .clearfix:after {
@@ -88,6 +89,13 @@
   margin-left: 10%;
   border: 1px solid #f5f5f5;
   float: left;
+}
+
+.topology-title {
+  width: 80%;
+  margin: 0 auto;
+  font-size: 1.5em;
+  padding: 10px;
 }
 
 /* Responsiveness - Mobile First */

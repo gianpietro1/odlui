@@ -1,17 +1,19 @@
 class Odlrest
 
+  @odl_server = '10.0.2.2' 
+
   def self.getnodes
-    base_url = "http://admin:admin@odl:8181/restconf/operational/opendaylight-inventory:nodes/"
+    base_url = "http://admin:admin@#{@odl_server}:8181/restconf/operational//network-topology:network-topology/topology/flow:1/"
     data = RestClient::Request.execute(:url => base_url , :method => :get, :"Content-Type" => 'application/xml')
     data_parsed = Hash.from_xml(data)
-    return data_parsed["nodes"]["node"]
+    return data_parsed["topology"]["node"]
   end
 
   def self.gettopo
-    base_url = "http://admin:admin@odl:8181/restconf/operational/network-topology:network-topology/"
+    base_url = "http://admin:admin@#{@odl_server}:8181/restconf/operational/network-topology:network-topology/"
     data = RestClient::Request.execute(:url => base_url , :method => :get, :"Content-Type" => 'application/xml')
     data_parsed = Hash.from_xml(data)
-    return data_parsed["network_topology"]["topology"]
+    return data_parsed["network_topology"]["topology"][0]
   end
 
 end
