@@ -17,7 +17,12 @@ class Odlrest
     base_url = "http://admin:admin@#{@odl_server}:8181/restconf/operational/network-topology:network-topology/"
     data = RestClient::Request.execute(:url => base_url , :method => :get, :"Content-Type" => 'application/xml')
     data_parsed = Hash.from_xml(data)
-    return data_parsed["network_topology"]["topology"][0]
+    if Rails.env.development?
+      return data_parsed["network_topology"]["topology"][0]
+    elsif Rails.env.production?
+      return data_parsed["network_topology"]["topology"]
+    end
+    
   end
 
 end
