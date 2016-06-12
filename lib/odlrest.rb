@@ -20,9 +20,8 @@ class Odlrest
     if Rails.env.development?
       return data_parsed["network_topology"]["topology"][0]
     elsif Rails.env.production?
-      return data_parsed["network_topology"]["topology"]
+      return data_parsed["network_topology"]["topology"][2]
     end
-    
   end
 
 end
