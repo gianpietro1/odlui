@@ -59,11 +59,11 @@ group :development do
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   gem 'capistrano-rvm', github: "capistrano/rvm"
+  gem 'capistrano-rbenv', github: "capistrano/rbenv"
   #HTMLtoHAML
   gem 'html2haml'
 end
 
 group :production do
   gem 'pg'
-  gem 'rails_12factor'
 end

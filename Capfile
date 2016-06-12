@@ -26,7 +26,8 @@ Dir.glob('lib/capistrano/tasks/*.cap').each { |r| import r }
 
 require 'capistrano/bundler'
 require 'capistrano/rails'
-require 'capistrano/rvm'
+require 'capistrano/rbenv'
+#require 'capistrano/rvm'
 require "capistrano/rails/assets"
 
 set :rvm_type, :user
