@@ -33,9 +33,7 @@ class Odlrest
   end
 
   def self.gethostgw(node_id)
-    firsthop_gw = getsingletopo(node_id)["node"]["attachment_points"]["tp_id"]
-    hop = [firsthop_gw[0..firsthop_gw.rindex(':')-1],firsthop_gw]
-    return hop
+    return getsingletopo(node_id)["node"]["attachment_points"]["tp_id"]
   end
 
   def self.getflows_t0(node_id)
@@ -64,11 +62,9 @@ class Odlrest
     return getsingletopo(host_id)["node"]["addresses"]
   end
 
-  def self.getnext(node_id,in_port,dst_host)
+  def self.getnext(node_id,dest_mac,dest_ip,in_port)
     flows = {}
-    dest_mac = Odlrest.getaddresses(dst_host)["mac"]
-    dest_ip = Odlrest.getaddresses(dst_host)["ip"]
-    Odlrest.getflows_t0(node_id).map do |flow|
+    getflows_t0(node_id).map do |flow|
       if flow["match"]
         if ((flow["match"]["in_port"] && flow["match"]["in_port"] == in_port) || 
             (flow["match"]["ipv4_destination"] && flow["match"]["ipv4_destination"] == dest_ip) ||
@@ -81,30 +77,23 @@ class Odlrest
     the_flow = flows.max_by{|k,v| v}
     out_port = []
     endpoints = []
-    if Odlrest.getflow_t0(node_id,the_flow[0])["instructions"]["instruction"]["apply_actions"]["action"].class == Array
-      Odlrest.getflow_t0(node_id,the_flow[0])["instructions"]["instruction"]["apply_actions"]["action"].map do |action|
-        unless action["output_action"]["output_node_connector"] == "CONTROLLER"
-          out_port << action["output_action"]["output_node_connector"]
-        end
+    getflow_t0(node_id,the_flow[0])["instructions"]["instruction"]["apply_actions"]["action"].map do |action|
+      unless action["output_action"]["output_node_connector"] == "CONTROLLER"
+        out_port << action["output_action"]["output_node_connector"]
       end
-    else 
-      out_port = Odlrest.getflow_t0(node_id,the_flow[0])["instructions"]["instruction"]["apply_actions"]["action"]["output_action"]["output_node_connector"]
     end
-    # Got out_port
     if out_port.length == 1
-      unless out_port == in_port.delete(in_port[0..in_port.rindex(':')])
-        endpoints << Odlrest.endpoint(node_id,out_port[0])
-      end
+      endpoints << endpoint(node_id,out_port[0])
     else
       out_port.each do |port|
-        unless port == in_port.delete(in_port[0..in_port.rindex(':')]) # split horizon
-          endpoints << Odlrest.endpoint(node_id,port)
+        unless port == in_port # split horizon
+          endpoints << endpoint(node_id,port)
         end
       end 
     end
     to_delete = []
     endpoints.each do |element|
-      if ((element[0].include? "host") && (element[0] != "host:"+dest_mac))
+      if ((element[0].include? "host") && (element[0] != dest_mac))
         # marking not matching hosts as deletable from path
         to_delete << element
       end
@@ -117,24 +106,54 @@ class Odlrest
   end
 
   def self.getpaths(src_host,dst_host)
-    #define first hop
-    hop = Odlrest.gethostgw(src_host)
     hops = []
-    hops << hop[0]
+    dest_mac = getaddresses(dst_host)["mac"]
+    dest_ip = getaddresses(dst_host)["ip"]
+    firsthop_gw = gethostgw(src_host)
+    firsthop = [firsthop_gw[0..firsthop_gw.rindex(':')-1],firsthop_gw]
+    hops << firsthop[0]
+    nexthop = firsthop
     while true do
-      nexthop = Odlrest.getnext(hop[0],hop[1],dst_host)
-      if nexthop[0]
-        if nexthop[0][0].include? dst_host
+      nexthop = getnext(nexthop[0],dest_mac,dest_ip,nexthop[1])
+      if nexthop[0].class == String #single path
+        if nexthop[0].include? dst_host
+          puts "lasthop was #{prevhop[0]}"
           break
         else
-          hops << nexthop[0][0]
-          hop = nexthop[0]
-        end      
-      else
-        break
+          hops << nexthop[0]
+        end
+      elsif nexthop[0].class == Array #multipath
+        #nexthop.each do |path| # keep looping here for each path, then return hash with paths        
       end
     end
     return hops
+  end
+
+  def self.pathloop(src_host,dst_host)
+    #define first hop
+    dest_mac = getaddresses(dst_host)["mac"]
+    dest_ip = getaddresses(dst_host)["ip"]
+    firsthop_gw = gethostgw(src_host)
+    firsthop = [firsthop_gw[0..firsthop_gw.rindex(':')-1],firsthop_gw]
+    # begin storing path
+    paths = {}
+    # calculate second hop
+    nexthops = getnext(firsthop[0],dest_mac,dest_ip,firsthop[1])
+    paths = process_hops(firsthop,nexthops,dest_mac,dest_ip)
+    return paths
+  end
+
+  def self.process_hops(prevhop,nexthops,dest_mac,dest_ip)
+    paths[prevhop[0]] = []
+    nexthops.each do |nexthop|
+       paths[prevhop[0]] << nexthop[0]
+       puts prevhop
+       puts nexthop
+       #new_prevhop = nexthop
+       #new_nexthops = getnext(nexthop[0],dest_mac,dest_ip,nexthop[1])
+       #process_hops(new_prevhop,new_nexthops,dest_mac,dest_ip)
+    end
+    return paths
   end
 
 end
